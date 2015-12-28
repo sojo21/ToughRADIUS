@@ -1,6 +1,4 @@
-
 systemctl disable firewalld.service
-
 systemctl stop firewalld.service
 
 mkdir -p /opt/toughradius/data
@@ -8,7 +6,6 @@ mkdir -p /var/toughradius
 
 cp /opt/toughradius/docker/privkey.pem /var/toughradius/privkey.pem
 cp /opt/toughradius/docker/cacert.pem /var/toughradius/cacert.pem
-
 cp /opt/toughradius/docker/radiusd.conf /etc/radiusd.conf
 cp /opt/toughradius/docker/supervisord.conf /etc/supervisord.conf
 cp /opt/toughradius/docker/toughrad /usr/bin/toughrad
@@ -17,6 +14,9 @@ cp /opt/toughradius/docker/toughradius.service /usr/lib/systemd/system/toughradi
 chmod +x /usr/bin/toughrad
 
 yum update -y
+yum install -y libffi-devel openssl openssl-devel git gcc crontabs python-devel python-setuptools
+yum install -y  mysql-devel MySQL-python
+yum clean all
 
 wget http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
 rpm -ivh mysql-community-release-el7-5.noarch.rpm
@@ -27,10 +27,6 @@ mysql -uroot -e "set password for 'root'@'localhost' = password('root');"
 mysql -uroot -proot -e "create database toughradius DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;"
 mysql -uroot -proot -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'root' WITH GRANT OPTION;"
 mysql -uroot -proot -e "FLUSH PRIVILEGES;"
-
-yum install -y libffi-devel openssl openssl-devel git gcc crontabs python-devel python-setuptools
-yum install -y  mysql-devel MySQL-python
-yum clean all
 
 easy_install pip
 pip install supervisor
@@ -53,5 +49,4 @@ ln -s /opt/toughradius/toughctl /usr/bin/toughctl && chmod +x /usr/bin/toughctl
 /opt/toughradius/toughctl --initdb
 
 service toughradius start
-
 systemctl enable toughradius
