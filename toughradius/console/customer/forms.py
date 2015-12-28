@@ -61,28 +61,6 @@ password_reset_form =  pyforms.Form(
     )
 
 
-
-def account_open_form(products=[]):
-    return pyforms.Form(
-        pyforms.Textbox("recharge_card", description=u"充值卡号", required="required", **input_style),
-        pyforms.Password("recharge_pwd", description=u"充值卡密码", required="required", **input_style),
-        pyforms.Textbox("account_number", description=u"用户账号",  required="required", **input_style),
-        pyforms.Password("password", description=u"认证密码", required="required", **input_style),
-        pyforms.Dropdown("product_id",args=products, description=u"资费",  required="required", **input_style),
-        pyforms.Button("submit",  type="submit", html=u"<b>提交</b>", **button_style),
-        title=u"用户自助开户",
-        action="/open"
-    )
-
-recharge_form =  pyforms.Form(
-        pyforms.Textbox("account_number",description=u"用户账号",readonly="readonly", **input_style),
-        pyforms.Textbox("recharge_card", description=u"充值卡号", required="required", **input_style),
-        pyforms.Password("recharge_pwd", description=u"充值卡密码", required="required", **input_style),
-        pyforms.Button("submit",  type="submit", html=u"<b>提交</b>", **button_style),
-        title=u"用户自助充值",
-        action="/recharge"
-    )
-    
     
 def member_update_form():
     return pyforms.Form(
@@ -100,5 +78,27 @@ def member_update_form():
     
 
 
+def account_open_form(products=[]):
+    return pyforms.Form(
+        pyforms.Textbox("recharge_card", description=u"充值卡号", required="required", **input_style),
+        pyforms.Password("recharge_pwd", description=u"充值卡密码", required="required", **input_style),
+        pyforms.Textbox("account_number", description=u"用户账号",  required="required", **input_style),
+        pyforms.Password("password", description=u"认证密码", required="required", **input_style),
+        pyforms.Dropdown("product_id",args=products, description=u"资费",  required="required", **input_style),
+        pyforms.Button("submit",  type="submit", html=u"<b>提交</b>", **button_style),
+        title=u"用户自助开户",
+        action="/open"
+    )
+
+recharge_form =  pyforms.Form(
+#         pyforms.Textbox("account_number",description=u"用户账号",readonly="readonly", **input_style),
+        pyforms.Textbox("account_number",description=u"",readonly="readonly", style="display:none", **input_style),
+        pyforms.Textbox("recharge_card", description=u"帐号", readonly="readonly", **input_style),
+        pyforms.Password("recharge_pwd", description=u"密码", required="required", **input_style),
+        pyforms.Button("submit",  type="submit", html=u"<b>激活帐号</b>", **button_style),
+        title=u"帐号自助激活",
+        action="/recharge"
+    )
+ 
 
 

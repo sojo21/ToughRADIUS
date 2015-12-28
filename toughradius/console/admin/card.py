@@ -107,7 +107,8 @@ def card_create(db, render):
         models.SlcRadProduct.product_status == 0,
         models.SlcRadProduct.product_policy.in_([0,2,3,5])
     )]
-    batch_no = datetime.datetime.now().strftime("%Y%m%d")
+    #修改batch_no = datetime.datetime.now().strftime("%Y%m%d")
+    batch_no = datetime.datetime.now().strftime("%y%m")
     form = card_forms.recharge_card_form(products)
     form.batch_no.set_value(batch_no)
     return render("card_form",form=form)
@@ -115,7 +116,7 @@ def card_create(db, render):
 @app.post('/create',apply=auth_opr)
 def card_create(db, render):
     def gencardpwd(clen=8):
-        r = list('1234567890abcdefghijklmnopqrstuvwxyz')
+        r = list('123456789')#修改
         rg = utils.random_generator
         return utils.encrypt(''.join([rg.choice(r) for _ in range(clen)]))
         
@@ -128,8 +129,10 @@ def card_create(db, render):
         return render("card_form",form=form)
     card_type = int(form.d.card_type)
     batch_no = form.d.batch_no
-    if len(batch_no) != 8:
-        return render("card_form",form=form,msg=u"批次号必须是8位数字")
+#修改     if len(batch_no) != 8:
+#修改         return render("card_form",form=form,msg=u"批次号必须是8位数字")
+    if len(batch_no) != 4:
+        return render("card_form",form=form,msg=u"批次号必须是4位数字")
     
     pwd_len = int(form.d.pwd_len)
     if pwd_len > 16:
@@ -148,13 +151,15 @@ def card_create(db, render):
         return render("card_form",form=form,msg=u"不能发行余额为0的余额卡")
     
     for _card in range(start_card,stop_card+1):
-        card_number = "%s%s"%(batch_no,str(_card).zfill(5))
+        #修改card_number = "%s%s"%(batch_no,str(_card).zfill(5))
+        card_number = "%s%s"%(batch_no,str(_card).zfill(4))
         card_obj = models.SlcRechargerCard()
         card_obj.batch_no = batch_no
         card_obj.card_number = card_number
         card_obj.card_passwd = gencardpwd(pwd_len)
         card_obj.card_type = card_type
-        card_obj.card_status = 0
+#修改默认是未激活的         card_obj.card_status = 0
+        card_obj.card_status = 1
         card_obj.product_id = card_type==0 and form.d.product_id or -1
         card_obj.fee_value = fee_value
         card_obj.months = card_type==0 and int(form.d.months) or 0

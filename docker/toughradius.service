@@ -1,0 +1,13 @@
+[Unit] 
+Description=ToughRADIUS Service 
+After=mysqld.service 
+Requires=mysqld.service 
+
+[Service] 
+RemainAfterExit=yes 
+ExecStart=/usr/bin/toughrad start 
+ExecStop=/usr/bin/toughrad stop
+ExecReload=/usr/bin/toughrad restart
+
+[Install] 
+WantedBy=multi-user.target

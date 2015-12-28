@@ -55,8 +55,8 @@ MAX_EXPIRE_DATE = '3000-12-30'
 
 TMPDIR = tempfile.gettempdir()
 
-page_size = 20
-
+# page_size = 20
+page_size = 100
 __cache_timeout__ = 600
 
 cache = CacheManager(cache_regions={'short_term':{ 'type': 'memory', 'expire': __cache_timeout__ }}) 

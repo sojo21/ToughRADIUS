@@ -36,19 +36,44 @@ app.config['__prefix__'] = __prefix__
 ###############################################################################
 # recharge
 ###############################################################################
+# 
+# def check_card(card):
+#     if not card:
+#         return dict(code=1, data=u"充值卡不存在")
+#     if card.card_status == CardInActive:
+#         return dict(code=1, data=u"充值卡未激活")
+#     elif card.card_status == CardUsed:
+#         return dict(code=1, data=u"充值卡已被使用")
+#     elif card.card_status == CardRecover:
+#         return dict(code=1, data=u"充值卡已被回收")
+#     if card.expire_date < utils.get_currdate():
+#         return dict(code=1, data=u"充值卡已过期")
+#     return dict(code=0)
 
 def check_card(card):
     if not card:
-        return dict(code=1, data=u"充值卡不存在")
+        return dict(code=1, data=u"帐号不存在")
     if card.card_status == CardInActive:
-        return dict(code=1, data=u"充值卡未激活")
+        return dict(code=1, data=u"帐号状态异常")
     elif card.card_status == CardUsed:
-        return dict(code=1, data=u"充值卡已被使用")
+        return dict(code=1, data=u"帐号已经过期失效")
     elif card.card_status == CardRecover:
-        return dict(code=1, data=u"充值卡已被回收")
+        return dict(code=1, data=u"帐号已被回收")
     if card.expire_date < utils.get_currdate():
-        return dict(code=1, data=u"充值卡已过期")
+        return dict(code=1, data=u"帐号已过期")
     return dict(code=0)
+
+# @app.get('/')
+# def account_recharge(db, render):
+#     member = db.query(models.SlcMember).get(get_cookie("customer_id"))
+#     if member.email_active == 0 and get_param_value(db, "customer_must_active") == "1":
+#         return render("error", msg=u"激活您的电子邮箱才能使用此功能")
+#     account_number = request.params.get('account_number')
+#     form = forms.recharge_form()
+#     form.recharge_card.set_value('')
+#     form.recharge_pwd.set_value('')
+#     form.account_number.set_value(account_number)
+#     return render('base_form', form=form)
 
 @app.get('/')
 def account_recharge(db, render):
@@ -57,11 +82,10 @@ def account_recharge(db, render):
         return render("error", msg=u"激活您的电子邮箱才能使用此功能")
     account_number = request.params.get('account_number')
     form = forms.recharge_form()
-    form.recharge_card.set_value('')
+    form.recharge_card.set_value(account_number)
     form.recharge_pwd.set_value('')
     form.account_number.set_value(account_number)
     return render('base_form', form=form)
-
 
 @app.post('/')
 def account_recharge(db, render):
@@ -161,7 +185,11 @@ def account_recharge(db, render):
     order.order_desc = u"用户自助充值，充值卡[ %s ]" % form.d.recharge_card
     db.add(order)
 
-    account.expire_date = expire_date
+#修改     account.expire_date = expire_date
+    if utils.add_months(datetime.date.today(),card.months).strftime("%Y-%m-%d")>expire_date:
+        account.expire_date = utils.add_months(datetime.date.today(),card.months).strftime("%Y-%m-%d")
+    else:
+        account.expire_date = expire_date     
     account.balance += balance
     account.time_length += card.times
     account.flow_length += card.flows
