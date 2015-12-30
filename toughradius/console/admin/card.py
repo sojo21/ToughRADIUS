@@ -126,7 +126,7 @@ def card_create(db, render):
         r1 = list('123456789')#修改
         r2 = list('abcdefghjkmnpqrtwxyz')#修改
         rg = utils.random_generator
-        return utils.encrypt(''.join([rg.choice(r1) for _ in range(clen)]+[rg.choice(r2) for _ in range(2)]))
+        return utils.encrypt(''.join([rg.choice(r2) for _ in range(2)]+[rg.choice(r1) for _ in range(clen)]))
         
     products = [ (n.id,n.product_name) for n in db.query(models.SlcRadProduct).filter(
         models.SlcRadProduct.product_status == 0,
