@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #coding:utf-8
-
+import string
 from bottle import Bottle
 from bottle import request
 from bottle import response
@@ -15,6 +15,7 @@ from toughradius.console.base import *
 import bottle
 import datetime
 from sqlalchemy import func
+import random
 
 __prefix__ = "/card"
 
@@ -108,17 +109,24 @@ def card_create(db, render):
         models.SlcRadProduct.product_policy.in_([0,2,3,5])
     )]
     #修改batch_no = datetime.datetime.now().strftime("%Y%m%d")
-    batch_no = datetime.datetime.now().strftime("%y%m")
+    batch_no = datetime.datetime.now().strftime("%y")
     form = card_forms.recharge_card_form(products)
     form.batch_no.set_value(batch_no)
     return render("card_form",form=form)
     
 @app.post('/create',apply=auth_opr)
+# def card_create(db, render):
+#     def gencardpwd(clen=8):
+#         r = list('123456789')#修改
+#         rg = utils.random_generator
+#         return utils.encrypt(''.join([rg.choice(r) for _ in range(clen)]))
+  
 def card_create(db, render):
     def gencardpwd(clen=8):
-        r = list('123456789')#修改
+        r1 = list('123456789')#修改
+        r2 = list('abcdefghjkmnpqrtwxyz')#修改
         rg = utils.random_generator
-        return utils.encrypt(''.join([rg.choice(r) for _ in range(clen)]))
+        return utils.encrypt(''.join([rg.choice(r1) for _ in range(clen)]+[rg.choice(r2) for _ in range(2)]))
         
     products = [ (n.id,n.product_name) for n in db.query(models.SlcRadProduct).filter(
         models.SlcRadProduct.product_status == 0,
@@ -131,8 +139,8 @@ def card_create(db, render):
     batch_no = form.d.batch_no
 #修改     if len(batch_no) != 8:
 #修改         return render("card_form",form=form,msg=u"批次号必须是8位数字")
-    if len(batch_no) != 4:
-        return render("card_form",form=form,msg=u"批次号必须是4位数字")
+    if len(batch_no) != 2:
+        return render("card_form",form=form,msg=u"批次号必须是2位数字")
     
     pwd_len = int(form.d.pwd_len)
     if pwd_len > 16:
@@ -140,6 +148,7 @@ def card_create(db, render):
 
     start_card = int(form.d.start_no)
     stop_card = int(form.d.stop_no)
+    
     if start_card > stop_card:
         return render("card_form",form=form,msg=u"开始卡号不能大于结束卡号")
     
@@ -152,6 +161,7 @@ def card_create(db, render):
     
     for _card in range(start_card,stop_card+1):
         #修改card_number = "%s%s"%(batch_no,str(_card).zfill(5))
+        
         card_number = "%s%s"%(batch_no,str(_card).zfill(4))
         card_obj = models.SlcRechargerCard()
         card_obj.batch_no = batch_no
