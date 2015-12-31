@@ -1,3 +1,4 @@
+master
 yum install -y git
 
 git clone -b master https://github.com/sojo21/ToughRADIUS.git /opt/toughradius
