@@ -145,9 +145,10 @@
                                      % if permit.match('/card/active') and card.card_status == 0:
                                     <a href="javascript:active_card('${card.id}')" class="opt-btn btn-default">激活</a>
                                      % endif
-                                     % if permit.match('/card/recycle') and card.card_status == 0:
+                                     % if permit.match('/card/recycle') and card.card_status == 1:
                                      <a href="javascript:recycle_card('${card.id}')" class="opt-btn btn-default">回收</a>
                                      % endif
+
                                 </td>
                             </tr>
                         % endfor
