@@ -11,6 +11,7 @@ cp /opt/toughradius/docker/cacert.pem /var/toughradius/cacert.pem
 cp /opt/toughradius/docker/radiusd.conf /etc/radiusd.conf
 cp /opt/toughradius/docker/supervisord.conf /etc/supervisord.conf
 cp /opt/toughradius/docker/toughrad /usr/bin/toughrad
+cp /opt/toughradius/docker/toughradius.service /usr/lib/systemd/system/toughradius.service
 
 chmod +x /usr/bin/toughrad
 

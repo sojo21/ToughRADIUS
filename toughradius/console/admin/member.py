@@ -10,6 +10,7 @@ from toughradius.console import models
 from toughradius.console.admin import member_forms
 import decimal
 import datetime
+from encodings import gbk
 
 __prefix__ = "/member"
 
@@ -444,20 +445,22 @@ def member_import_post(db, render):
 
         vform = member_forms.user_import_vform()
         if not vform.validates(dict(
-            realname=attr_array[0],
-            idcard=attr_array[1],
-            mobile=attr_array[2],
-            address=attr_array[3],
-            account_number=attr_array[4],
-            password=attr_array[5],
-            begin_date=attr_array[6],
-            expire_date=attr_array[7],
+            realname=attr_array[0].decode("gbk"),
+            idcard=attr_array[1].decode("gbk"),
+            mobile=attr_array[2].decode("gbk"),
+            address=attr_array[3].decode("gbk"),
+            account_number=attr_array[4].decode("gbk"),
+            password=attr_array[5].decode("gbk"),
+            begin_date=attr_array[6].decode("gbk"),
+            expire_date=attr_array[7].decode("gbk"),
             balance=attr_array[8],
             time_length=utils.hour2sec(attr_array[9]),
             flow_length=utils.mb2kb(attr_array[10]))):
             return render("bus_import_form", form=iform, msg=u"line %s error: %s" % (_num, vform.errors))
-
+ 
         impusers.append(vform)
+
+
 
     for form in impusers:
         try:
