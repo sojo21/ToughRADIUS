@@ -20,52 +20,54 @@ function reactive(){
         <table class="table table-striped ">
             <thead>
                 <tr>
-                    <th colspan="9"> 账号列表</th>
+                    <th colspan="9"> 账号信息</th>
                 </tr>
             </thead>
             <tbody>
-            <tr class="active">
-                <th>账号</th>
-		<th>状态</th>
-                <th>到期时间</th>
-		<th>资费套餐</th>
-                <th>在线?</th>
-                
-            </tr>            
-            % for user in accounts:
-            <tr ${status_colors[user.status]} ${online_colors(user.account_number)}>
-                <td>
-		     ${user.account_number}
-		    % if is_expire(user.expire_date) or user.status == 4:
-		        <a class="opt-btn btn-default" href="/recharge?account_number=${user.account_number}">帐号激活</a>
-		    % endif
-		</td>
-                <td>
-                    % if is_expire(user.expire_date) or user.status == 4:
-                        <span class="label label-warning">未激活</span>
-                    % elif user.status == 1:
-                        <span class="label label-success">正常</span>
-                    % elif user.status == 2:
-                        <span class="label label-default">停机</span>
-                    % elif user.status == 3:
-                        <span class="label label-danger">销户</span>
-                    % endif
-                </td>
-                <td>
-		    % if is_expire(user.expire_date) or user.status == 4:
-                        <span class="label label-warning">未激活</span>
-                    % elif user.status == 1:
-                        <span class="label label-success">${user.expire_date}</span>
-                    % elif user.status == 2:
-                        <span class="label label-default">未激活</span>
-                    % elif user.status == 3:
-                        <span class="label label-danger">未激活</span>
-                    % endif
-		</td>
-		<td>${user.product_name}</td>
-                <td>
-                    ${is_online(user.account_number) and u'在线' or u'离线'}
-                </td>
+		% for user in accounts:
+            	<tr ${status_colors[user.status]} ${online_colors(user.account_number)}>
+                	<tr>
+				<th>账号</th><td>${user.account_number}
+				% if is_expire(user.expire_date) or user.status == 4:
+		        		<a class="opt-btn btn-default" href="/recharge?account_number=${user.account_number}">帐号激活</a>
+		    		% endif
+				</td>
+			</tr>
+
+			<tr>
+				<th>状态</th>
+				<td>
+				    % if is_expire(user.expire_date) or user.status == 4:
+				        <span class="label label-warning">未激活</span>
+				    % elif user.status == 1:
+				        <span class="label label-success">正常</span>
+				    % elif user.status == 2:
+				        <span class="label label-default">停机</span>
+				    % elif user.status == 3:
+				        <span class="label label-danger">销户</span>
+				    % endif
+		        	</td>
+			</tr>
+			<tr>
+				<th>到期时间</th>
+				<td>
+				    % if is_expire(user.expire_date) or user.status == 4:
+				        <span class="label label-warning">未激活</span>
+				    % elif user.status == 1:
+				        <span class="label label-success">${user.expire_date}</span>
+				    % elif user.status == 2:
+				        <span class="label label-default">未激活</span>
+				    % elif user.status == 3:
+				        <span class="label label-danger">未激活</span>
+				    % endif
+				</td>
+			</tr>
+			<tr>
+				<th>资费套餐</th><td>${user.product_name}</td>
+			</tr>
+                	<tr>
+				<th>在线?</th><td>${is_online(user.account_number) and u'在线' or u'离线'}</td>
+			</tr>
                  
             </tr>
             % endfor
